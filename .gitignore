@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 node_modules/
+dist/
 .vercel/
 *.log
 .DS_Store
