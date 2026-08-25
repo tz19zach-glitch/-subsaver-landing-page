@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check api/waitlist.js && node --check api/event.js && node --check api/_lib/http.js && node --check api/_lib/supabase.js"
+    "check": "node --check api/waitlist.js && node --check api/event.js && node --check api/_lib/http.js && node --check api/_lib/supabase.js && node --check functions/api/waitlist.js && node --check functions/api/event.js && node --check functions/_lib/http.js && node --check functions/_lib/supabase.js"
   }
 }
