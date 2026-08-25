@@ -1,5 +1,4 @@
 import {cleanEmail, cleanText, jsonResponse, parseJsonBody, requestIsSameOrigin} from '../_lib/http.js';
-import {supabaseRequest} from '../_lib/supabase.js';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, character => ({
@@ -31,6 +30,12 @@ export async function onRequestPost({request, env}) {
   }
 
   try {
+    if (!env.DB) {
+      const error = new Error('Database binding is not configured');
+      error.code = 'SERVER_NOT_CONFIGURED';
+      throw error;
+    }
+
     const body = await parseJsonBody(request);
 
     // Honeypot: respond normally without saving so bots cannot learn the filter.
@@ -48,35 +53,45 @@ export async function onRequestPost({request, env}) {
       return jsonResponse(400, {ok: false, message: 'נדרשת הסכמה למדיניות הפרטיות.'});
     }
 
-    const existing = await supabaseRequest(
-      env,
-      `waitlist_leads?email=eq.${encodeURIComponent(email)}&select=id&limit=1`,
-      {method: 'GET'}
-    );
-    const alreadyRegistered = Array.isArray(existing) && existing.length > 0;
+    const existing = await env.DB.prepare('SELECT id FROM waitlist_leads WHERE email = ? LIMIT 1')
+      .bind(email)
+      .first();
+    const alreadyRegistered = Boolean(existing);
     const now = new Date().toISOString();
-    const lead = {
-      full_name: fullName,
+    await env.DB.prepare(`
+      INSERT INTO waitlist_leads (
+        id, full_name, email, source, utm_source, utm_medium, utm_campaign,
+        utm_content, utm_term, page_version, consent, consent_at, status,
+        user_agent, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, 'new', ?, ?)
+      ON CONFLICT(email) DO UPDATE SET
+        full_name = excluded.full_name,
+        source = excluded.source,
+        utm_source = excluded.utm_source,
+        utm_medium = excluded.utm_medium,
+        utm_campaign = excluded.utm_campaign,
+        utm_content = excluded.utm_content,
+        utm_term = excluded.utm_term,
+        page_version = excluded.page_version,
+        consent = 1,
+        consent_at = excluded.consent_at,
+        user_agent = excluded.user_agent,
+        updated_at = excluded.updated_at
+    `).bind(
+      crypto.randomUUID(),
+      fullName,
       email,
-      source: cleanText(body.source, 500) || 'direct',
-      utm_source: cleanText(body.utm_source, 120),
-      utm_medium: cleanText(body.utm_medium, 120),
-      utm_campaign: cleanText(body.utm_campaign, 120),
-      utm_content: cleanText(body.utm_content, 120),
-      utm_term: cleanText(body.utm_term, 120),
-      page_version: cleanText(body.page_version, 40) || 'unknown',
-      consent: true,
-      consent_at: now,
-      user_agent: cleanText(request.headers.get('User-Agent'), 500),
-      updated_at: now
-    };
-    if (!alreadyRegistered) lead.status = 'new';
-
-    await supabaseRequest(env, 'waitlist_leads?on_conflict=email', {
-      method: 'POST',
-      headers: {Prefer: 'resolution=merge-duplicates,return=minimal'},
-      body: JSON.stringify(lead)
-    });
+      cleanText(body.source, 500) || 'direct',
+      cleanText(body.utm_source, 120),
+      cleanText(body.utm_medium, 120),
+      cleanText(body.utm_campaign, 120),
+      cleanText(body.utm_content, 120),
+      cleanText(body.utm_term, 120),
+      cleanText(body.page_version, 40) || 'unknown',
+      now,
+      cleanText(request.headers.get('User-Agent'), 500),
+      now
+    ).run();
 
     const emailJobs = [];
     if (!alreadyRegistered) {

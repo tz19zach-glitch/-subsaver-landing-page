@@ -1,5 +1,4 @@
 import {cleanText, jsonResponse, parseJsonBody, requestIsSameOrigin} from '../_lib/http.js';
-import {supabaseRequest} from '../_lib/supabase.js';
 
 const ALLOWED_EVENTS = new Set([
   'page_view',
@@ -17,6 +16,12 @@ export async function onRequestPost({request, env}) {
   }
 
   try {
+    if (!env.DB) {
+      const error = new Error('Database binding is not configured');
+      error.code = 'SERVER_NOT_CONFIGURED';
+      throw error;
+    }
+
     const body = await parseJsonBody(request);
     const eventName = cleanText(body.event, 40);
     if (!eventName || !ALLOWED_EVENTS.has(eventName)) {
@@ -38,17 +43,16 @@ export async function onRequestPost({request, env}) {
       reason: cleanText(source.reason, 80)
     };
 
-    await supabaseRequest(env, 'landing_events', {
-      method: 'POST',
-      headers: {Prefer: 'return=minimal'},
-      body: JSON.stringify({
-        event_name: eventName,
-        session_id: properties.session_id,
-        page_version: properties.page_version,
-        path: properties.path,
-        properties
-      })
-    });
+    await env.DB.prepare(`
+      INSERT INTO landing_events (event_name, session_id, page_version, path, properties)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(
+      eventName,
+      properties.session_id,
+      properties.page_version,
+      properties.path,
+      JSON.stringify(properties)
+    ).run();
 
     return jsonResponse(201, {ok: true});
   } catch (error) {

@@ -17,25 +17,26 @@ Phase 0 turns the existing landing page into a measurable waitlist funnel.
 - GitHub Free stores the public source repository.
 - Cloudflare Pages serves the static site over a free `pages.dev` HTTPS address.
 - Cloudflare Pages Functions provide the `/api` endpoints on the Workers Free plan.
-- Supabase Free stores waitlist leads and analytics events.
+- Cloudflare D1 Free stores waitlist leads and analytics events.
 - Resend is optional and remains disabled until email delivery is intentionally configured.
 - No custom domain or payment method is required for the validation stage.
 
-The Vercel-compatible API remains in `api/` for portability. The zero-cost commercial validation deployment uses the Cloudflare-compatible API in `functions/`.
+The Vercel-compatible API remains in `api/` for reference only. The zero-cost validation deployment uses Cloudflare Pages Functions in `functions/` and a D1 database binding named `DB`.
 
 ## Required setup before public validation
 
-1. Create or select a Supabase project.
-2. Run `supabase/migrations/001_phase0_waitlist.sql` in the Supabase SQL editor.
-3. Connect this repository to a Cloudflare Pages Free project.
-4. Add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and `SITE_ORIGIN` as encrypted Cloudflare project variables.
-5. Leave every `RESEND_*` variable unset during the zero-cost validation stage.
-6. Add Tal's approved contact address to the policy pages before public lead collection.
-7. Deploy to the free `pages.dev` HTTPS address, then run the acceptance tests below.
+1. Connect this repository to a Cloudflare Pages Free project.
+2. Create a D1 Free database named `subsaver-phase0`.
+3. Run `migrations/0001_phase0.sql` against the D1 database.
+4. Bind the database to the Pages project with the binding name `DB`.
+5. Set `SITE_ORIGIN` to the deployed `pages.dev` HTTPS address.
+6. Leave every `RESEND_*` variable unset during the zero-cost validation stage.
+7. Add Tal's approved contact address to the policy pages before public lead collection.
+8. Deploy, then run the acceptance tests below.
 
 ## Acceptance tests
 
-- New lead is visible in `waitlist_leads` within one minute.
+- New lead is visible in the D1 `waitlist_leads` table within one minute.
 - Duplicate email does not create a second row.
 - Success is shown only after the API confirms the database write.
 - Network or server failure preserves the form and shows a clear error.
