@@ -10,6 +10,7 @@ Phase 0 turns the existing landing page into a measurable waitlist funnel.
 - Confirmation and owner-notification email integration is ready for Resend.
 - Landing-page events are stored in a separate D1 table without direct personal identifiers.
 - Privacy and terms pages are included.
+- The official project contact address is `subsaver.contact.il@gmail.com`.
 - Secrets stay in server-side environment variables and are never embedded in the browser.
 - The build publishes only the three public pages plus Cloudflare routing and security-header files.
 
@@ -31,7 +32,7 @@ The Vercel-compatible API remains in `api/` for reference only. The zero-cost va
 3. Run `migrations/0001_phase0.sql` against the D1 database.
 4. Bind the database to the Pages project with the binding name `DB`.
 5. Leave every `RESEND_*` variable unset during the zero-cost validation stage.
-6. Add Tal's approved contact address to the policy pages before public lead collection.
+6. Confirm that `subsaver.contact.il@gmail.com` appears on the public privacy and terms pages.
 7. Deploy, then run the acceptance tests below.
 
 ## Acceptance tests
