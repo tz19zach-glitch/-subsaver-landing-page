@@ -2,7 +2,7 @@ import {cleanText, jsonResponse, parseJsonBody, requestIsSameOrigin} from '../_l
 
 const SUBSCRIPTION_COUNTS = new Set(['0_2', '3_5', '6_plus']);
 const PAIN_FREQUENCIES = new Set(['monthly', 'quarterly', 'rarely']);
-const WILLINGNESS_OPTIONS = new Set(['yes_990', 'maybe', 'no']);
+const WILLINGNESS_OPTIONS = new Set(['yes_99_year', 'maybe', 'no']);
 
 async function ensureSurveySchema(database) {
   await database.prepare(`
@@ -10,7 +10,7 @@ async function ensureSurveySchema(database) {
       lead_id TEXT PRIMARY KEY,
       subscription_count TEXT CHECK (subscription_count IN ('0_2','3_5','6_plus')),
       pain_frequency TEXT CHECK (pain_frequency IN ('monthly','quarterly','rarely')),
-      willingness_to_pay TEXT CHECK (willingness_to_pay IN ('yes_990','maybe','no')),
+      willingness_to_pay TEXT CHECK (willingness_to_pay IN ('yes_99_year','maybe','no')),
       opened_at TEXT NOT NULL,
       submitted_at TEXT,
       updated_at TEXT NOT NULL,

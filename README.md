@@ -9,7 +9,7 @@ Phase 1 turns the landing page into a measurable demand-validation funnel.
 - Consent and acquisition metadata are stored with each lead.
 - Confirmation and owner-notification email integration is ready for Resend.
 - Landing-page events are stored in a separate D1 table without direct personal identifiers.
-- After signup, a three-question survey measures problem intensity and willingness to pay ₪9.90 per month.
+- After signup, a three-question survey measures problem intensity and willingness to pay ₪99 per year.
 - Survey opens and completions are measured in `demand_validation_responses`, linked to the lead by an opaque ID.
 - Privacy and terms pages are included.
 - The official project contact address is `subsaver.contact.il@gmail.com`.
@@ -55,7 +55,7 @@ The Vercel-compatible API remains in `api/` for reference only. The zero-cost va
 SELECT
   COUNT(*) AS survey_opened,
   SUM(CASE WHEN submitted_at IS NOT NULL THEN 1 ELSE 0 END) AS survey_completed,
-  SUM(CASE WHEN willingness_to_pay = 'yes_990' THEN 1 ELSE 0 END) AS willing_to_pay
+  SUM(CASE WHEN willingness_to_pay = 'yes_99_year' THEN 1 ELSE 0 END) AS willing_to_pay
 FROM demand_validation_responses;
 
 SELECT subscription_count, pain_frequency, willingness_to_pay, COUNT(*) AS responses

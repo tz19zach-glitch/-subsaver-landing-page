@@ -118,14 +118,14 @@ const surveySubmitResult = await responseBody(await saveDemandSurvey({
     leadId: 'lead-123',
     subscriptionCount: '3_5',
     painFrequency: 'monthly',
-    willingnessToPay: 'yes_990'
+    willingnessToPay: 'yes_99_year'
   }),
   env: {DB: surveySubmitDb}
 }));
 assert.equal(surveySubmitResult.status, 200);
 assert.equal(surveySubmitResult.body.ok, true);
 assert.equal(surveySubmitDb.writes.at(-1).values[1], '3_5');
-assert.equal(surveySubmitDb.writes.at(-1).values[3], 'yes_990');
+assert.equal(surveySubmitDb.writes.at(-1).values[3], 'yes_99_year');
 
 const invalidSurveyResult = await responseBody(await saveDemandSurvey({
   request: post('/api/demand-survey', {
@@ -133,7 +133,7 @@ const invalidSurveyResult = await responseBody(await saveDemandSurvey({
     leadId: 'lead-123',
     subscriptionCount: '99',
     painFrequency: 'monthly',
-    willingnessToPay: 'yes_990'
+    willingnessToPay: 'yes_99_year'
   }),
   env: {DB: new MockDatabase()}
 }));
