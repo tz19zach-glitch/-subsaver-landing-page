@@ -1,11 +1,11 @@
 {
-  "name": "subsaver-landing-phase0",
-  "version": "0.1.0",
+  "name": "subsaver-landing-phase1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node --check api/waitlist.js && node --check api/event.js && node --check api/_lib/http.js && node --check api/_lib/supabase.js && node --check functions/api/waitlist.js && node --check functions/api/event.js && node --check functions/_lib/http.js && node --check scripts/build.mjs && node --check scripts/test-functions.mjs",
+    "check": "node --check api/waitlist.js && node --check api/event.js && node --check api/_lib/http.js && node --check api/_lib/supabase.js && node --check functions/api/waitlist.js && node --check functions/api/event.js && node --check functions/api/demand-survey.js && node --check functions/_lib/http.js && node --check scripts/build.mjs && node --check scripts/test-functions.mjs",
     "test": "node scripts/test-functions.mjs"
   }
 }

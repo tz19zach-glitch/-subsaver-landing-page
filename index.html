@@ -275,7 +275,7 @@
     .modal.open{display:flex}
     .modal-card{
       width:min(520px,100%);background:#071827;border:1px solid rgba(39,228,216,.22);
-      border-radius:24px;padding:30px;box-shadow:var(--shadow)
+      border-radius:24px;padding:30px;box-shadow:var(--shadow);max-height:calc(100vh - 40px);overflow:auto
     }
     .modal-card h3{margin-top:0;font-size:30px}
     .field{display:grid;gap:8px;margin:16px 0}
@@ -296,6 +296,18 @@
     .form-status{display:none;margin-top:16px;font-weight:700;line-height:1.5}
     .form-status.success{color:#72f3c0}
     .form-status.error{color:#ff9eaa}
+    .survey-progress{color:var(--teal);font-size:13px;font-weight:800;margin-bottom:8px}
+    .survey-question{border:0;padding:0;margin:22px 0}
+    .survey-question legend{font-weight:800;margin-bottom:10px;line-height:1.45}
+    .survey-options{display:grid;gap:8px}
+    .survey-option{
+      display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:13px;
+      border:1px solid rgba(255,255,255,.12);background:#04111d;cursor:pointer
+    }
+    .survey-option:has(input:checked){border-color:var(--teal);background:rgba(39,228,216,.08)}
+    .survey-option input{accent-color:var(--teal);flex:0 0 auto}
+    .survey-finish{padding:8px 0 2px}
+    .survey-finish h3{color:#72f3c0}
     .btn[disabled]{opacity:.62;cursor:wait;transform:none!important}
 
 
@@ -925,30 +937,82 @@
     </div>
   </footer>
 
-  <div class="modal" id="joinModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="joinModal" role="dialog" aria-modal="true" aria-label="הרשמה ל־SubSaver">
     <div class="modal-card">
-      <h3 id="modalTitle">מצטרפים לרשימת ההמתנה</h3>
-      <p class="muted">השאירו פרטים ונעדכן אתכם כשה־MVP יהיה מוכן.</p>
-      <form id="joinForm">
-        <label class="field">שם מלא<input name="name" required autocomplete="name" /></label>
-        <label class="field">אימייל<input name="email" type="email" required autocomplete="email" /></label>
-        <label class="field-honeypot" aria-hidden="true">אתר<input name="website" tabindex="-1" autocomplete="off" /></label>
-        <label class="consent"><input name="consent" type="checkbox" required /><span>אני מאשר/ת את שמירת הפרטים לצורך הצטרפות לרשימת ההמתנה, בהתאם ל<a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</span></label>
-        <div class="modal-actions">
-          <button class="btn btn-primary" type="submit" id="submitJoin">שליחת פרטים</button>
-          <button class="btn btn-secondary" type="button" id="closeModal">סגירה</button>
-        </div>
-        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
-      </form>
+      <section id="joinStep">
+        <h3 id="modalTitle">מצטרפים לרשימת ההמתנה</h3>
+        <p class="muted">השאירו פרטים ונעדכן אתכם כשה־MVP יהיה מוכן.</p>
+        <form id="joinForm">
+          <label class="field">שם מלא<input name="name" required autocomplete="name" /></label>
+          <label class="field">אימייל<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="field-honeypot" aria-hidden="true">אתר<input name="website" tabindex="-1" autocomplete="off" /></label>
+          <label class="consent"><input name="consent" type="checkbox" required /><span>אני מאשר/ת את שמירת הפרטים לצורך הצטרפות לרשימת ההמתנה, בהתאם ל<a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</span></label>
+          <div class="modal-actions">
+            <button class="btn btn-primary" type="submit" id="submitJoin">שליחת פרטים</button>
+            <button class="btn btn-secondary js-close-modal" type="button">סגירה</button>
+          </div>
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section id="surveyStep" hidden>
+        <div class="survey-progress">עוד 20 שניות — 3 שאלות</div>
+        <h3>עזרו לנו לבנות מוצר שבאמת חוסך כסף</h3>
+        <p class="muted">ההרשמה נשמרה. התשובות הבאות יעזרו לנו לבדוק אם הבעיה מספיק חשובה.</p>
+        <form id="surveyForm">
+          <fieldset class="survey-question">
+            <legend>על כמה מנויים בתשלום אתם משלמים כיום?</legend>
+            <div class="survey-options">
+              <label class="survey-option"><input type="radio" name="subscriptionCount" value="0_2" required />0–2 מנויים</label>
+              <label class="survey-option"><input type="radio" name="subscriptionCount" value="3_5" />3–5 מנויים</label>
+              <label class="survey-option"><input type="radio" name="subscriptionCount" value="6_plus" />6 מנויים ומעלה</label>
+            </div>
+          </fieldset>
+          <fieldset class="survey-question">
+            <legend>באיזו תדירות אתם מגלים חיוב מיותר או מנוי ששכחתם?</legend>
+            <div class="survey-options">
+              <label class="survey-option"><input type="radio" name="painFrequency" value="monthly" required />לפחות פעם בחודש</label>
+              <label class="survey-option"><input type="radio" name="painFrequency" value="quarterly" />פעם בכמה חודשים</label>
+              <label class="survey-option"><input type="radio" name="painFrequency" value="rarely" />לעיתים רחוקות או בכלל לא</label>
+            </div>
+          </fieldset>
+          <fieldset class="survey-question">
+            <legend>אם SubSaver תחסוך לכם יותר מ־₪30 בחודש, תהיו מוכנים לשלם ₪9.90 בחודש?</legend>
+            <div class="survey-options">
+              <label class="survey-option"><input type="radio" name="willingnessToPay" value="yes_990" required />כן</label>
+              <label class="survey-option"><input type="radio" name="willingnessToPay" value="maybe" />אולי — תלוי בתוצאה</label>
+              <label class="survey-option"><input type="radio" name="willingnessToPay" value="no" />לא</label>
+            </div>
+          </fieldset>
+          <div class="modal-actions">
+            <button class="btn btn-primary" type="submit" id="submitSurvey">שמירת התשובות</button>
+            <button class="btn btn-secondary js-close-modal" type="button">אעשה זאת אחר כך</button>
+          </div>
+          <div class="form-status" id="surveyStatus" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section id="surveyFinish" class="survey-finish" hidden>
+        <h3>תודה — זה בדיוק המידע שאנחנו צריכים</h3>
+        <p class="muted">התשובות נשמרו וישמשו רק לבדיקת הביקוש ולתכנון הגרסה הראשונה.</p>
+        <button class="btn btn-primary js-close-modal" type="button">סיום</button>
+      </section>
     </div>
   </div>
 
   <script>
-    const PAGE_VERSION = 'phase0-v1';
+    const PAGE_VERSION = 'phase1-demand-v1';
     const modal = document.getElementById('joinModal');
+    const joinStep = document.getElementById('joinStep');
+    const surveyStep = document.getElementById('surveyStep');
+    const surveyFinish = document.getElementById('surveyFinish');
     const joinForm = document.getElementById('joinForm');
+    const surveyForm = document.getElementById('surveyForm');
     const submitJoin = document.getElementById('submitJoin');
+    const submitSurvey = document.getElementById('submitSurvey');
     const formStatus = document.getElementById('formStatus');
+    const surveyStatus = document.getElementById('surveyStatus');
+    let currentLeadId = null;
     const params = new URLSearchParams(location.search);
     const sessionId = sessionStorage.getItem('subsaver_session_id') || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
     sessionStorage.setItem('subsaver_session_id', sessionId);
@@ -978,12 +1042,15 @@
 
     document.querySelectorAll('.js-open-modal').forEach((btn, index) => btn.addEventListener('click', () => {
       modal.classList.add('open');
+      joinStep.hidden = false;
+      surveyStep.hidden = true;
+      surveyFinish.hidden = true;
       formStatus.style.display = 'none';
       track('cta_click', {cta_position: btn.closest('header') ? 'header' : index === 1 ? 'hero' : 'bottom'});
       track('waitlist_open');
       setTimeout(() => joinForm.elements.name.focus(), 50);
     }));
-    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
+    document.querySelectorAll('.js-close-modal').forEach(button => button.addEventListener('click', () => modal.classList.remove('open')));
     modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
 
@@ -1140,13 +1207,20 @@
         const result = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(result.message || 'לא הצלחנו לשמור את ההרשמה.');
 
-        formStatus.className = 'form-status success';
-        formStatus.textContent = result.alreadyRegistered
-          ? 'האימייל כבר נמצא ברשימת ההמתנה — לא צריך להירשם שוב.'
-          : 'נרשמת בהצלחה! נעדכן אותך כשהגרסה הראשונה תהיה מוכנה.';
-        formStatus.style.display = 'block';
-        joinForm.reset();
+        currentLeadId = result.leadId;
         track('waitlist_success', {already_registered: Boolean(result.alreadyRegistered)});
+        joinForm.reset();
+        joinStep.hidden = true;
+        surveyStep.hidden = false;
+        surveyFinish.hidden = true;
+        surveyForm.reset();
+        surveyStatus.style.display = 'none';
+        modal.querySelector('.modal-card').scrollTop = 0;
+        fetch('/api/demand-survey', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'open', leadId: currentLeadId})
+        }).catch(() => {});
       } catch (error) {
         formStatus.className = 'form-status error';
         formStatus.textContent = error.name === 'AbortError'
@@ -1159,6 +1233,51 @@
         submitJoin.disabled = false;
         submitJoin.textContent = 'שליחת פרטים';
         joinForm.removeAttribute('aria-busy');
+      }
+    });
+
+    surveyForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!surveyForm.reportValidity()) return;
+
+      const answers = Object.fromEntries(new FormData(surveyForm).entries());
+      submitSurvey.disabled = true;
+      submitSurvey.textContent = 'שומרים...';
+      surveyForm.setAttribute('aria-busy', 'true');
+      surveyStatus.style.display = 'none';
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+      try {
+        const response = await fetch('/api/demand-survey', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            action: 'submit',
+            leadId: currentLeadId,
+            subscriptionCount: answers.subscriptionCount,
+            painFrequency: answers.painFrequency,
+            willingnessToPay: answers.willingnessToPay
+          }),
+          signal: controller.signal
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.message || 'לא הצלחנו לשמור את התשובות.');
+
+        surveyStep.hidden = true;
+        surveyFinish.hidden = false;
+        modal.querySelector('.modal-card').scrollTop = 0;
+      } catch (error) {
+        surveyStatus.className = 'form-status error';
+        surveyStatus.textContent = error.name === 'AbortError'
+          ? 'השמירה התעכבה. בדקו את החיבור ונסו שוב.'
+          : (error.message || 'לא הצלחנו לשמור את התשובות. נסו שוב.');
+        surveyStatus.style.display = 'block';
+      } finally {
+        clearTimeout(timeout);
+        submitSurvey.disabled = false;
+        submitSurvey.textContent = 'שמירת התשובות';
+        surveyForm.removeAttribute('aria-busy');
       }
     });
 

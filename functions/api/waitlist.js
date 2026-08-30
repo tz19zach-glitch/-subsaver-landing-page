@@ -58,6 +58,7 @@ export async function onRequestPost({request, env}) {
       .first();
     const alreadyRegistered = Boolean(existing);
     const now = new Date().toISOString();
+    const newLeadId = crypto.randomUUID();
     await env.DB.prepare(`
       INSERT INTO waitlist_leads (
         id, full_name, email, source, utm_source, utm_medium, utm_campaign,
@@ -78,7 +79,7 @@ export async function onRequestPost({request, env}) {
         user_agent = excluded.user_agent,
         updated_at = excluded.updated_at
     `).bind(
-      crypto.randomUUID(),
+      newLeadId,
       fullName,
       email,
       cleanText(body.source, 500) || 'direct',
@@ -113,7 +114,12 @@ export async function onRequestPost({request, env}) {
     const emailResults = await Promise.allSettled(emailJobs);
     const confirmationEmailSent = emailResults[0]?.status === 'fulfilled' && emailResults[0].value.sent === true;
 
-    return jsonResponse(200, {ok: true, alreadyRegistered, confirmationEmailSent});
+    return jsonResponse(200, {
+      ok: true,
+      alreadyRegistered,
+      confirmationEmailSent,
+      leadId: existing?.id || newLeadId
+    });
   } catch (error) {
     console.error('waitlist_signup_failed', {message: error.message, code: error.code});
     const message = error.code === 'SERVER_NOT_CONFIGURED'
