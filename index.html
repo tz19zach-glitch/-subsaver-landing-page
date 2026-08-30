@@ -128,11 +128,19 @@
       padding:9px 13px;border-radius:999px;border:1px solid rgba(39,228,216,.22);
       background:rgba(39,228,216,.05);font-size:14px;color:#d8fbf9
     }
-    h1{font-size:clamp(48px,7.1vw,86px);line-height:1.02;margin:0 0 24px;letter-spacing:-2px}
+    h1{font-size:clamp(42px,6vw,76px);line-height:1.06;margin:0 0 24px;letter-spacing:-2px}
     .hero-copy p{font-size:20px;color:#c1d0d8;max-width:650px;margin:0 0 30px}
     .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
     .hero-notes{display:flex;gap:22px;flex-wrap:wrap;color:#a9bbc7;font-size:14px;margin-top:20px}
     .hero-notes span::before{content:"✓";color:var(--teal);margin-left:7px}
+    .product-disclosure{
+      position:absolute;top:8px;right:50%;transform:translateX(50%);z-index:5;
+      display:inline-flex;align-items:center;gap:8px;margin:0;padding:7px 11px;
+      border-radius:999px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(2,9,18,.86);color:#b8cad4;font-size:12px;font-weight:700;
+      white-space:nowrap
+    }
+    .product-disclosure::before{content:"●";color:var(--gold);font-size:9px}
 
     .phone-stage{position:relative;min-height:620px;display:grid;place-items:center}
     .phone-glow{
@@ -235,6 +243,24 @@
       width:54px;height:54px;border-radius:16px;display:grid;place-items:center;
       font-size:25px;background:rgba(39,228,216,.08);border:1px solid rgba(39,228,216,.2);margin-bottom:18px
     }
+
+    .audience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .audience-card{
+      padding:22px;border-radius:20px;text-align:center;
+      background:linear-gradient(180deg,rgba(9,31,48,.94),rgba(4,16,27,.97));
+      border:1px solid rgba(70,232,225,.17);box-shadow:0 18px 58px rgba(0,0,0,.18)
+    }
+    .audience-card strong{display:block;margin-top:8px;font-size:17px}
+    .audience-card span{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+    .audience-icon{font-size:30px;line-height:1}
+
+    .research-points{display:grid;gap:12px;margin-top:18px}
+    .research-point{
+      display:flex;align-items:flex-start;gap:12px;padding:15px 16px;border-radius:16px;
+      background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07)
+    }
+    .research-point::before{content:"✓";color:var(--teal);font-weight:900;flex:0 0 auto}
+    .research-note{margin-top:18px;color:var(--muted);font-size:14px}
 
     .split{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .panel{border-radius:24px;padding:32px}
@@ -560,6 +586,7 @@
       .logos{grid-template-columns:repeat(4,1fr)}
       .steps{grid-template-columns:repeat(2,1fr)}
       .features{grid-template-columns:repeat(2,1fr)}
+      .audience-grid{grid-template-columns:repeat(2,1fr)}
       .split{grid-template-columns:1fr}
       .cta-panel{grid-template-columns:1fr}
     }
@@ -567,6 +594,8 @@
       .section{padding:64px 0}
       .nav .btn{display:none}
       h1{letter-spacing:-1px}
+      .hero{padding-top:48px}
+      .hero-copy h1{font-size:clamp(38px,11vw,48px);line-height:1.08}
       .hero-copy p{font-size:18px}
       .hero-actions{display:grid}
       .hero-actions .btn{width:100%}
@@ -575,8 +604,13 @@
       .screen{min-height:535px}
       .logos{grid-template-columns:repeat(2,1fr)}
       .stats,.steps,.features{grid-template-columns:1fr}
+      .audience-grid{grid-template-columns:1fr}
       .cta-panel{padding:30px 22px}
       .modal-actions{flex-direction:column}
+      .modal{padding:10px;align-items:flex-end}
+      .modal-card{max-height:calc(100dvh - 20px);padding:24px 20px;border-radius:22px}
+      .modal-card h3{font-size:26px;line-height:1.25}
+      .product-disclosure{top:0;font-size:11px;max-width:94%;white-space:normal;text-align:center}
     }
 
 
@@ -710,7 +744,7 @@
         <a href="#features">יתרונות</a>
         <a href="#faq">שאלות נפוצות</a>
       </nav>
-      <button class="btn btn-primary js-open-modal">הצטרפו בחינם</button>
+      <button class="btn btn-primary js-open-modal">הצטרפו לרשימת ההמתנה</button>
     </div>
   </header>
 
@@ -728,6 +762,7 @@
       </div>
       <div class="container hero-grid">
         <div class="phone-stage phone-stage-final" data-parallax aria-label="הדמיית מסך האפליקציה">
+          <div class="product-disclosure">הדמיית מוצר — המסכים עשויים להשתנות בגרסת הבטא</div>
           <div class="growth-trail" aria-hidden="true">
             <svg viewBox="0 0 620 430" role="img" aria-label="גרף חיובי עולה">
               <defs>
@@ -773,20 +808,19 @@
 
         <div class="hero-copy">
           <div class="badges">
-            <span class="badge">ללא חיבור לבנק</span>
-            <span class="badge">מופעל באמצעות AI</span>
-            <span class="badge">פרטיות מלאה</span>
+            <span class="badge">🟢 בשלב בדיקת ביקוש בישראל</span>
+            <span class="badge">ללא חיבור לחשבון הבנק</span>
           </div>
-          <h1>כל מנוי מיותר<br><span class="teal">עולה כסף.</span></h1>
-          <p>SubSaver עוזרת לכם להבין על מה אתם משלמים, לזהות מנויים שלא בשימוש ולקבל התראה לפני החיוב הבא — באמצעות צילום חשבונית, קבלה או אישור תשלום.</p>
+          <h1>כמה כסף יורד לכם בכל חודש<br><span class="teal">על מנויים שכבר לא בשימוש?</span></h1>
+          <p>SubSaver מתוכננת לרכז את המנויים מתוך חשבוניות וצילומי חיוב, לעזור לזהות מה כבר לא בשימוש ולהתריע לפני החיוב הבא — בלי חיבור לחשבון הבנק.</p>
           <div class="hero-actions">
-            <button class="btn btn-primary js-open-modal">הצטרפו עכשיו בחינם</button>
+            <button class="btn btn-primary js-open-modal">הצטרפו לרשימת ההמתנה</button>
             <a class="btn btn-secondary" href="#how">ראו איך זה עובד</a>
           </div>
           <div class="hero-notes">
-            <span>אין צורך בכרטיס אשראי</span>
+            <span>פחות מדקה</span>
             <span>ללא התחייבות</span>
-            <span>ביטול בכל רגע</span>
+            <span>עוזרים לעצב את גרסת הבטא</span>
           </div>
         </div>
       </div>
@@ -812,8 +846,8 @@
 
     <section class="section" id="how">
       <div class="container">
-        <h2 class="section-title">איך <span class="teal">SubSaver</span> עובדת?</h2>
-        <p class="section-subtitle">תהליך פשוט שמתחיל במסמך שכבר נמצא אצלכם ומסתיים בתמונה ברורה של כל המנויים והחיובים.</p>
+        <h2 class="section-title">איך <span class="teal">SubSaver</span> מתוכננת לעבוד?</h2>
+        <p class="section-subtitle">כך מתוכננת גרסת ה־MVP: תהליך פשוט שמתחיל במסמך שכבר נמצא אצלכם ומסתיים בתמונה ברורה ובהצעה לפעולה.</p>
         <div class="steps reveal">
           <article class="step">
             <div class="step-number">1</div>
@@ -830,14 +864,14 @@
           <article class="step">
             <div class="step-number">3</div>
             <div class="step-icon">📊</div>
-            <h3>מקבלים דוחות ברורים</h3>
-            <p>כל המנויים מופיעים במקום אחד עם עלות חודשית, עלות שנתית וחיסכון אפשרי.</p>
+            <h3>מקבלים תמונה מרוכזת</h3>
+            <p>כל המנויים מופיעים במקום אחד עם עלות חודשית, עלות שנתית וחיסכון פוטנציאלי.</p>
           </article>
           <article class="step">
             <div class="step-number">4</div>
             <div class="step-icon">🔔</div>
             <h3>מקבלים התראה והצעת פעולה</h3>
-            <p>לפני החיוב, המערכת מתריעה ומציעה ביטול מהיר למנויים שלא היו בשימוש זמן רב.</p>
+            <p>לפני החיוב, המערכת מתריעה ומציעה מסלול פעולה או ביטול למנויים שלא היו בשימוש זמן רב.</p>
           </article>
         </div>
       </div>
@@ -852,17 +886,30 @@
           <article class="feature"><div class="feature-icon">⏳</div><h3>זיהוי שימוש נמוך</h3><p>המערכת מסמנת מנויים שלא נעשה בהם שימוש זמן רב.</p></article>
           <article class="feature">
             <div class="feature-icon">🔔</div>
-            <h3>התראה לפני חיוב + ביטול מהיר</h3>
-            <p>מקבלים תזכורת לפני החיוב, והמערכת מציעה ביטול מהיר למנויים שלא נעשה בהם שימוש זמן רב.</p>
+            <h3>התראה לפני חיוב + הצעת פעולה</h3>
+            <p>מקבלים תזכורת לפני החיוב והכוונה למסלול ביטול למנויים שלא נעשה בהם שימוש זמן רב.</p>
             <div class="alert-demo">
               <strong>Spotify מתחדש בעוד 3 ימים</strong>
               <small>לא זוהה שימוש משמעותי ב־45 הימים האחרונים.</small>
-              <button class="quick-cancel" type="button">בדיקת ביטול מהיר</button>
+              <button class="quick-cancel" type="button">בדיקת מסלול ביטול</button>
             </div>
           </article>
           <article class="feature"><div class="feature-icon">🧠</div><h3>AI חכם</h3><p>קריאה אוטומטית של מסמכים והפקת מידע שימושי וברור.</p></article>
           <article class="feature"><div class="feature-icon">🛡️</div><h3>פרטיות מלאה</h3><p>אין צורך לחבר חשבון בנק או למסור פרטי התחברות פיננסיים.</p></article>
           <article class="feature"><div class="feature-icon">🇮🇱</div><h3>מותאם לישראל</h3><p>שקלים, שירותים מקומיים וחוויית שימוש בעברית מלאה.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="audience">
+      <div class="container">
+        <h2 class="section-title">למי <span class="teal">SubSaver</span> מתאימה?</h2>
+        <p class="section-subtitle">אם אחד מהמצבים האלה מוכר לכם, נשמח שתעזרו לנו לבדוק ולבנות את גרסת הבטא.</p>
+        <div class="audience-grid reveal">
+          <article class="audience-card"><div class="audience-icon">📺</div><strong>3 מנויים או יותר</strong><span>סטרימינג, מוזיקה, ענן ושירותים נוספים</span></article>
+          <article class="audience-card"><div class="audience-icon">🤖</div><strong>כלי AI ותוכנות</strong><span>כמה שירותים מקצועיים בחיוב חודשי</span></article>
+          <article class="audience-card"><div class="audience-icon">⏱️</div><strong>תקופות ניסיון</strong><span>נרשמים לניסיון ולפעמים שוכחים לבטל</span></article>
+          <article class="audience-card"><div class="audience-icon">👨‍👩‍👧‍👦</div><strong>מנויים משפחתיים</strong><span>רוצים להבין מה פעיל ועל מה משלמים</span></article>
         </div>
       </div>
     </section>
@@ -879,28 +926,14 @@
           <div class="muted">בשנה</div>
         </div>
         <div class="panel">
-          <h2>תגובות מבדיקת קונספט</h2>
-          <p class="muted">הציטוטים הבאים הם דוגמאות שנוסחו על בסיס שיחות בדיקת צורך, ואינם ביקורות מאומתות של מוצר פעיל.</p>
-          <div class="testimonial">
-            <div class="testimonial-head">
-              <div class="avatar">נ׳</div>
-              <div class="testimonial-meta">
-                <strong>נועה, בת 28 · חיפה</strong>
-                <span>עצמאית, משתמשת במספר שירותי סטרימינג וכלי עבודה</span>
-              </div>
-            </div>
-            <p>“אני לא צריכה עוד אפליקציית תקציב. אני צריכה משהו שמראה לי בפשטות איזה מנוי עומד לרדת, כמה אני באמת משתמשת בו ומה אפשר לבטל עכשיו.”</p>
+          <h2>מה אנחנו בודקים עכשיו?</h2>
+          <p class="muted">SubSaver עדיין אינה מוצר פעיל. בשלב הזה אנחנו בודקים אם הבעיה והפתרון המתוכנן חשובים מספיק למשתמשים אמיתיים.</p>
+          <div class="research-points">
+            <div class="research-point">האם אנשים מגלים חיובים חוזרים או מנויים ששכחו?</div>
+            <div class="research-point">האם חשוב להשתמש בפתרון בלי לחבר חשבון בנק?</div>
+            <div class="research-point">האם הפתרון מספק ערך שאנשים יהיו מוכנים לשלם עליו?</div>
           </div>
-          <div class="testimonial">
-            <div class="testimonial-head">
-              <div class="avatar">א׳</div>
-              <div class="testimonial-meta">
-                <strong>אייל, בן 32 · תל אביב</strong>
-                <span>שכיר בהייטק, משלם על כלי AI, ענן וכושר</span>
-              </div>
-            </div>
-            <p>“הערך מבחינתי הוא לקבל התראה לפני החיוב והצעה ברורה לביטול — בלי למסור הרשאות לחשבון הבנק ובלי לחפש שעות איפה מבטלים.”</p>
-          </div>
+          <p class="research-note">ההרשמה והשאלון הקצר עוזרים לנו להחליט מה לבנות קודם — ואינם רכישה או התחייבות.</p>
         </div>
       </div>
     </section>
@@ -910,6 +943,9 @@
         <h2 class="section-title">שאלות נפוצות</h2>
         <div class="faq-list reveal">
           <div class="faq"><button><span>האם SubSaver מתחברת לחשבון הבנק שלי?</span><span class="plus">+</span></button><div class="faq-content">לא. גרסת ה־MVP מבוססת על העלאת קבלות, חשבוניות, אישורי תשלום וצילומי מסך.</div></div>
+          <div class="faq"><button><span>האם SubSaver כבר זמינה לשימוש?</span><span class="plus">+</span></button><div class="faq-content">עדיין לא. SubSaver נמצאת בשלב בדיקת ביקוש ותכנון גרסת ה־MVP. ההרשמה מצרפת אתכם לרשימת ההמתנה ואינה מספקת גישה מיידית למוצר.</div></div>
+          <div class="faq"><button><span>מה קורה אחרי ההרשמה?</span><span class="plus">+</span></button><div class="faq-content">הפרטים נשמרים ברשימת ההמתנה, ולאחר מכן מופיע שאלון קצר שעוזר לנו להבין אילו יכולות חשובות ביותר. נעדכן באימייל כשהבטא תהיה מוכנה.</div></div>
+          <div class="faq"><button><span>כמה זמן לוקחת ההרשמה?</span><span class="plus">+</span></button><div class="faq-content">מילוי הפרטים והשאלון הקצר לוקח פחות מדקה. אין צורך בכרטיס אשראי ואין התחייבות.</div></div>
           <div class="faq"><button><span>איך המערכת מזהה מנוי?</span><span class="plus">+</span></button><div class="faq-content">מנוע ה־AI קורא את פרטי העסקה, מזהה תשלום חוזר ומחלץ את שם השירות, המחיר ותאריך החיוב.</div></div>
           <div class="faq"><button><span>האם אפשר להוסיף מנוי ידנית?</span><span class="plus">+</span></button><div class="faq-content">כן. אפשר להוסיף, לערוך ולמחוק מנויים גם ללא מסמך.</div></div>
           <div class="faq"><button><span>האם הנתונים בדף הם נתוני משתמשים אמיתיים?</span><span class="plus">+</span></button><div class="faq-content">לא. המספרים בדף הם דוגמה להמחשת חוויית המוצר ואינם מבטיחים חיסכון מסוים.</div></div>
@@ -924,7 +960,7 @@
             <h2>שליטה טובה יותר במנויים.<br><span class="teal">פחות כסף שמתבזבז.</span><br>יותר כסף שנשאר אצלכם.</h2>
             <p class="muted">הצטרפו לרשימת ההמתנה וקבלו עדכון כשהגרסה הראשונה תהיה מוכנה.</p>
           </div>
-          <button class="btn btn-primary js-open-modal">הצטרפו עכשיו</button>
+          <button class="btn btn-primary js-open-modal">הצטרפו לרשימת ההמתנה</button>
         </div>
       </div>
     </section>
@@ -941,10 +977,10 @@
     <div class="modal-card">
       <section id="joinStep">
         <h3 id="modalTitle">מצטרפים לרשימת ההמתנה</h3>
-        <p class="muted">השאירו פרטים ונעדכן אתכם כשה־MVP יהיה מוכן.</p>
+        <p class="muted">השאירו פרטים ונעדכן אתכם כשה־MVP יהיה מוכן. ההרשמה אינה גישה למוצר פעיל.</p>
         <form id="joinForm">
           <label class="field">שם מלא<input name="name" required autocomplete="name" /></label>
-          <label class="field">אימייל<input name="email" type="email" required autocomplete="email" /></label>
+          <label class="field">אימייל<input name="email" type="email" required autocomplete="email" /><small class="muted">נשתמש באימייל רק לעדכונים על SubSaver. ללא ספאם.</small></label>
           <label class="field-honeypot" aria-hidden="true">אתר<input name="website" tabindex="-1" autocomplete="off" /></label>
           <label class="consent"><input name="consent" type="checkbox" required /><span>אני מאשר/ת את שמירת הפרטים לצורך הצטרפות לרשימת ההמתנה, בהתאם ל<a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</span></label>
           <div class="modal-actions">
@@ -1001,7 +1037,7 @@
   </div>
 
   <script>
-    const PAGE_VERSION = 'phase1-demand-v1';
+    const PAGE_VERSION = 'phase1-1-demand-v1';
     const modal = document.getElementById('joinModal');
     const joinStep = document.getElementById('joinStep');
     const surveyStep = document.getElementById('surveyStep');
@@ -1026,6 +1062,8 @@
         utm_source: params.get('utm_source'),
         utm_medium: params.get('utm_medium'),
         utm_campaign: params.get('utm_campaign'),
+        utm_content: params.get('utm_content'),
+        utm_term: params.get('utm_term'),
         ...extra
       };
     }
@@ -1165,7 +1203,7 @@
     }, {passive:true});
 
     document.querySelectorAll('.quick-cancel').forEach(button => {      button.addEventListener('click', () => {
-        button.textContent = 'פתיחת מסלול ביטול';
+        button.textContent = 'הדגמת מסלול ביטול';
         button.style.borderColor = 'rgba(39,228,216,.5)';
         button.style.color = '#bffbf6';
       });
