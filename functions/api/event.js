@@ -37,6 +37,8 @@ export async function onRequestPost({request, env}) {
       utm_source: cleanText(source.utm_source, 120),
       utm_medium: cleanText(source.utm_medium, 120),
       utm_campaign: cleanText(source.utm_campaign, 120),
+      utm_content: cleanText(source.utm_content, 120),
+      utm_term: cleanText(source.utm_term, 120),
       cta_position: cleanText(source.cta_position, 40),
       question: cleanText(source.question, 300),
       already_registered: source.already_registered === true,
