@@ -90,11 +90,26 @@ assert.equal(blockedOriginResult.status, 403);
 
 const eventDb = new MockDatabase();
 const eventResult = await responseBody(await recordEvent({
-  request: post('/api/event', {event: 'page_view', properties: {session_id: 'test-session', path: '/'}}),
+  request: post('/api/event', {
+    event: 'page_view',
+    properties: {
+      session_id: 'test-session',
+      path: '/',
+      utm_source: 'facebook',
+      utm_campaign: 'phase1_demand',
+      utm_content: 'h01',
+      utm_term: 'g15'
+    }
+  }),
   env: {DB: eventDb}
 }));
 assert.equal(eventResult.status, 201);
 assert.equal(eventDb.writes.length, 1);
+const storedEventProperties = JSON.parse(eventDb.writes[0].values[4]);
+assert.equal(storedEventProperties.utm_source, 'facebook');
+assert.equal(storedEventProperties.utm_campaign, 'phase1_demand');
+assert.equal(storedEventProperties.utm_content, 'h01');
+assert.equal(storedEventProperties.utm_term, 'g15');
 
 const invalidEventResult = await responseBody(await recordEvent({
   request: post('/api/event', {event: 'unknown'}),
