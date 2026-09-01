@@ -1,7 +1,15 @@
 import {jsonResponse} from '../_lib/http.js';
 
-const REPORT_OPENS_AT = Date.parse('2026-09-02T13:55:00Z');
-const REPORT_CLOSES_AT = Date.parse('2026-09-02T14:15:00Z');
+const REPORT_WINDOWS = [
+  {
+    opensAt: Date.parse('2026-09-01T15:55:00Z'),
+    closesAt: Date.parse('2026-09-01T16:30:00Z')
+  },
+  {
+    opensAt: Date.parse('2026-09-02T13:55:00Z'),
+    closesAt: Date.parse('2026-09-02T14:15:00Z')
+  }
+];
 
 const EVENTS_QUERY = `
   SELECT
@@ -68,7 +76,10 @@ export async function buildCampaignReport(database) {
 
 export async function onRequestGet({env}) {
   const now = Date.now();
-  if (now < REPORT_OPENS_AT || now > REPORT_CLOSES_AT) {
+  const reportIsAvailable = REPORT_WINDOWS.some(
+    ({opensAt, closesAt}) => now >= opensAt && now <= closesAt
+  );
+  if (!reportIsAvailable) {
     return jsonResponse(404, {ok: false, message: 'Not found'});
   }
 
